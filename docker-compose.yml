@@ -1,6 +1,6 @@
 services:
   cursor-api:
-    build: .
+    image: gtxfury/cursor-2api:v0.1
     container_name: cursor-api
     restart: unless-stopped
     ports:
