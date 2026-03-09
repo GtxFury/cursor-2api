@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大象牙膏 - Three.js 3D化学实验演示</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #1a1a2e; font-family: 'Segoe UI', system-ui, sans-serif; }
+        #container { width: 100vw; height: 100vh; display: block; }
+        footer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            display: flex; justify-content: center; align-items: center; gap: 16px;
+            padding: 22px; z-index: 10; pointer-events: none;
+        }
+        #startBtn {
+            padding: 14px 44px; font-size: 17px; font-weight: 600;
+            color: #fff; background: linear-gradient(135deg, #ff6b9d 0%, #c44dff 100%);
+            border: none; border-radius: 50px; cursor: pointer;
+            pointer-events: auto; transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(255,107,157,0.45); letter-spacing: 1px;
+        }
+        #startBtn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255,107,157,0.65);
+        }
+        #startBtn:active:not(:disabled) { transform: translateY(-1px); }
+        #startBtn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+        #stats {
+            color: rgba(255,255,255,0.5); font-size: 13px;
+            pointer-events: none; font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<footer>
+    <button id="startBtn">🧪 开始喷发</button>
+    <span id="stats"></span>
+</footer>
+
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const FLASK_BOTTOM_R = 3.0;
+const FLASK_NECK_R   = 0.55;
+const FLASK_CONE_H   = 5.5;
+const FLASK_NECK_H   = 2.5;
+const FLASK_H        = FLASK_CONE_H + FLASK_NECK_H;
+const FLASK_WALL     = 0.10;
+const LIQUID_INIT    = FLASK_CONE_H * 0.36;
+const MAX_P          = 12000;
+const ERUPT_DUR      = 8.0;
+const G              = -13.5;
+
+// ── Renderer ──
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+document.getElementById('container').appendChild(renderer.domElement);
+
+// ── Scene ──
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1a1a2e);
+scene.fog = new THREE.FogExp2(0x1a1a2e, 0.006);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileEquirectangularShader();
+scene.environment = pmrem.fromScene(new RoomEnvironment()).texture;
+
+// ── Camera ──
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 500);
+camera.position.set(22, 22, 22);
+camera.lookAt(0, 8, 0);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 8, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.update();
+
+// ── Lights ──
+scene.add(new THREE.AmbientLight(0x404060, 0.7));
+scene.add(new THREE.HemisphereLight(0xcce0ff, 0x444444, 0.5));
+
+const dir = new THREE.DirectionalLight(0xffffff, 1.6);
+dir.position.set(12, 28, 10);
+dir.castShadow = true;
+dir.shadow.mapSize.set(2048, 2048);
+dir.shadow.camera.near = 1;
+dir.shadow.camera.far = 65;
+const sh = 28;
+dir.shadow.camera.left = -sh;
+dir.shadow.camera.right = sh;
+dir.shadow.camera.top = sh;
+dir.shadow.camera.bottom = -sh;
+dir.shadow.bias = -0.0008;
+scene.add(dir);
+
+const glow = new THREE.PointLight(0xFF69B4, 0, 45);
+glow.position.set(0, 12, 0);
+scene.add(glow);
+
+// ── Ground ──
+const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(1000, 1000),
+    new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.3, metalness: 0.1 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// ── Flask helpers ──
+function flaskR(y) {
+    if (y <= 0) return FLASK_BOTTOM_R;
+    if (y >= FLASK_CONE_H) return FLASK_NECK_R;
+    const t = y / FLASK_CONE_H;
+    if (t < 0.72) return THREE.MathUtils.lerp(FLASK_BOTTOM_R, FLASK_NECK_R, t * 0.82);
+    const r0 = THREE.MathUtils.lerp(FLASK_BOTTOM_R, FLASK_NECK_R, 0.72 * 0.82);
+    const s = (t - 0.72) / 0.28;
+    return THREE.MathUtils.lerp(r0, FLASK_NECK_R, s * s * (3 - 2 * s));
+}
+function flaskInnerR(y) { return Math.max(0.04, flaskR(y) - FLASK_WALL); }
+
+// ── Flask mesh ──
+function flaskProfile() {
+    const p = [new THREE.Vector2(0.001, 0), new THREE.Vector2(FLASK_BOTTOM_R, 0)];
+    for (let i = 1; i <= 50; i++) {
+        const y = (i / 50) * FLASK_CONE_H;
+        p.push(new THREE.Vector2(flaskR(y), y));
+    }
+    p.push(new THREE.Vector2(FLASK_NECK_R, FLASK_CONE_H));
+    p.push(new THREE.Vector2(FLASK_NECK_R, FLASK_H - 0.12));
+    p.push(new THREE.Vector2(FLASK_NECK_R + 0.07, FLASK_H - 0.12));
+    p.push(new THREE.Vector2(FLASK_NECK_R + 0.07, FLASK_H));
+    p.push(new THREE.Vector2(FLASK_NECK_R + 0.02, FLASK_H));
+    return p;
+}
+const flask = new THREE.Mesh(
+    new THREE.LatheGeometry(flaskProfile(), 64),
+    new THREE.MeshPhysicalMaterial({
+        color: 0xffffff, transparent: true, opacity: 0.9,
+        roughness: 0.95, metalness: 0.35,
+        clearcoat: 1.0, clearcoatRoughness: 0.03,
+        transmission: 0.95, ior: 1.5, side: THREE.DoubleSide,
+    })
+);
+flask.castShadow = true;
+flask.receiveShadow = true;
+scene.add(flask);
+
+// ── Liquid ──
+let liquidLvl = LIQUID_INIT;
+let liquidMesh = null;
+const liquidMat = new THREE.MeshPhysicalMaterial({
+    color: 0xFF1493, transparent: true, opacity: 0.78,
+    roughness: 0.08, metalness: 0.0, transmission: 0.35, ior: 1.33,
+    side: THREE.DoubleSide, emissive: 0xFF69B4, emissiveIntensity: 0.25,
+});
+
+function rebuildLiquid(lv) {
+    if (liquidMesh) { scene.remove(liquidMesh); liquidMesh.geometry.dispose(); }
+    if (lv < 0.06) return;
+    const pts = [];
+    const n = 24;
+    pts.push(new THREE.Vector2(0.001, FLASK_WALL * 0.8));
+    pts.push(new THREE.Vector2(flaskInnerR(FLASK_WALL) - 0.015, FLASK_WALL * 0.8));
+    for (let i = 1; i <= n; i++) {
+        const y = FLASK_WALL + (i / n) * (lv - FLASK_WALL);
+        pts.push(new THREE.Vector2(flaskInnerR(y) - 0.015, y));
+    }
+    pts.push(new THREE.Vector2(flaskInnerR(lv) - 0.015, lv));
+    pts.push(new THREE.Vector2(0.001, lv));
+    liquidMesh = new THREE.Mesh(new THREE.LatheGeometry(pts, 64), liquidMat);
+    scene.add(liquidMesh);
+}
+rebuildLiquid(liquidLvl);
+
+// ── Foam texture ──
+function makeFoamTex() {
+    const S = 128, C = S / 2;
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = S;
+    const ctx = cv.getContext('2d');
+
+    const g = ctx.createRadialGradient(C * 0.88, C * 0.82, C * 0.05, C, C, C);
+    g.addColorStop(0, '#ffc8de');
+    g.addColorStop(0.3, '#ff80b8');
+    g.addColorStop(0.7, '#e04890');
+    g.addColorStop(1,   '#a0205860');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, S, S);
+
+    const id = ctx.getImageData(0, 0, S, S);
+    const d = id.data;
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+        const dx = x - C, dy = y - C, dist = Math.sqrt(dx * dx + dy * dy) / C;
+        const i4 = (y * S + x) * 4;
+        if (dist > 1) { d[i4 + 3] = 0; continue; }
+        const n = (Math.sin(x * 1.1 + y * 0.7) * 0.5 + Math.sin(x * 0.4 - y * 1.3) * 0.3
+                   + (Math.random() - 0.5) * 0.4) * 28;
+        d[i4]     = Math.min(255, Math.max(0, d[i4] + n));
+        d[i4 + 1] = Math.min(255, Math.max(0, d[i4 + 1] + n * 0.4));
+        d[i4 + 2] = Math.min(255, Math.max(0, d[i4 + 2] + n * 0.5));
+        d[i4 + 3] = Math.min(255, d[i4 + 3] * (1 - dist * dist * 0.12));
+    }
+    ctx.putImageData(id, 0, 0);
+
+    for (let i = 0; i < 40; i++) {
+        const a = Math.random() * Math.PI * 2, r = Math.random() * C * 0.75;
+        const bx = C + Math.cos(a) * r, by = C + Math.sin(a) * r, br = 1.5 + Math.random() * 4.5;
+        const bg = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+        bg.addColorStop(0, 'rgba(255,232,242,0.22)');
+        bg.addColorStop(1, 'rgba(255,200,220,0)');
+        ctx.fillStyle = bg;
+        ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fill();
+    }
+    return new THREE.CanvasTexture(cv);
+}
+
+// ── Foam instanced mesh ──
+const foamGeo = new THREE.IcosahedronGeometry(1, 2);
+const foamMat = new THREE.MeshStandardMaterial({
+    map: makeFoamTex(), color: 0xFF69B4,
+    roughness: 0.62, metalness: 0.02,
+    transparent: true, opacity: 0.78, depthWrite: false,
+    emissive: 0xFF1493, emissiveIntensity: 0.09,
+});
+const foam = new THREE.InstancedMesh(foamGeo, foamMat, MAX_P);
+foam.count = 0;
+foam.castShadow = true;
+foam.receiveShadow = true;
+foam.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+foam.frustumCulled = false;
+scene.add(foam);
+
+// ── Particle storage ──
+const parts = [];
+const _m = new THREE.Matrix4();
+const _p = new THREE.Vector3();
+const _q = new THREE.Quaternion();
+const _s = new THREE.Vector3();
+
+// ── Height map for stacking ──
+const HM = 180, HC = 0.32, HH = HM / 2 * HC;
+const hmap = new Float32Array(HM * HM);
+function hmI(x, z) {
+    const gx = Math.floor((x + HH) / HC), gz = Math.floor((z + HH) / HC);
+    return (gx >= 0 && gx < HM && gz >= 0 && gz < HM) ? gz * HM + gx : -1;
+}
+function hmG(x, z) { const i = hmI(x, z); return i >= 0 ? hmap[i] : 0; }
+function hmA(x, z, v) { const i = hmI(x, z); if (i >= 0) hmap[i] += v; }
+
+// ── Eruption state ──
+let erupting = false, eT = 0;
+const clock = new THREE.Clock();
+
+function intensity(t) {
+    if (t >= ERUPT_DUR) return 0;
+    const p = t / ERUPT_DUR;
+    return Math.max(0, (1 - p * p) * (1 - p * 0.85));
+}
+
+function emit(dt, t) {
+    const I = intensity(t);
+    if (I <= 0) return;
+    const burst = t < 0.45 ? 1.85 : 1.0;
+    const rate = I * 50 * burst;
+    const n = Math.min(Math.floor(rate * dt * 60 + Math.random()), MAX_P - parts.length);
+
+    for (let i = 0; i < n; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.random() * (FLASK_NECK_R - FLASK_WALL) * 0.82;
+        const px = Math.cos(a) * r, pz = Math.sin(a) * r;
+
+        const spdBase = (23 + Math.random() * 12) * I;
+        const spdBoost = t < 0.55 ? 1.28 : 1.0;
+        const spd = spdBase * spdBoost;
+        const hSpr = 0.07 + (1 - I) * 0.28;
+
+        const sz = 0.22 + Math.random() * 0.22;
+
+        parts.push({
+            px, py: FLASK_H + 0.15, pz,
+            vx: (Math.random() - 0.5) * hSpr * spd * 0.07,
+            vy: spd,
+            vz: (Math.random() - 0.5) * hSpr * spd * 0.07,
+            sz, st: 0, sq: 1.0,
+            slideT: 0, maxSlide: 0.25 + Math.random() * 0.8,
+            fric: 0.91 + Math.random() * 0.06,
+            rx: Math.random() * 6.28,
+            ry: Math.random() * 6.28,
+            rz: Math.random() * 6.28,
+        });
+    }
+}
+
+function updateParts(dt) {
+    const len = parts.length;
+    for (let i = 0; i < len; i++) {
+        const p = parts[i];
+        if (p.st === 2) continue;
+
+        if (p.st === 0) {
+            p.vy += G * dt;
+            p.vx += (Math.random() - 0.5) * 0.55 * dt;
+            p.vz += (Math.random() - 0.5) * 0.55 * dt;
+
+            const dC = Math.sqrt(p.px * p.px + p.pz * p.pz);
+            if (p.vy > 0.5 && p.py < FLASK_H + 22 && dC > 0.22) {
+                const cf = Math.min(3.5, 1.8 / (dC + 0.08));
+                p.vx -= (p.px / dC) * cf * dt;
+                p.vz -= (p.pz / dC) * cf * dt;
+            }
+            if (dC > 0.01 && p.vy < 1.5 && Math.random() < 0.06) {
+                p.vx += (p.px / dC) * 0.5;
+                p.vz += (p.pz / dC) * 0.5;
+            }
+
+            // Updraft inside active column
+            if (erupting && p.py > FLASK_H && p.py < FLASK_H + 16) {
+                const colDist = Math.sqrt(p.px * p.px + p.pz * p.pz);
+                if (colDist < 1.2) {
+                    p.vy += intensity(eT) * 2.5 * dt;
+                }
+            }
+
+            p.px += p.vx * dt;
+            p.py += p.vy * dt;
+            p.pz += p.vz * dt;
+
+            // Ground / heightmap collision
+            const gh = hmG(p.px, p.pz);
+            if (p.py - p.sz * 0.4 <= gh) {
+                p.py = gh + p.sz * 0.26;
+                p.st = 1; p.vy = 0;
+                p.vx *= 0.32; p.vz *= 0.32;
+                hmA(p.px, p.pz, p.sz * 0.30);
+            }
+
+            // Flask collision (cone body)
+            if (p.py > 0 && p.py < FLASK_H + 0.3) {
+                const dxz = Math.sqrt(p.px * p.px + p.pz * p.pz);
+                if (dxz > 0.001) {
+                    const fR = p.py <= FLASK_CONE_H ? flaskR(p.py) : FLASK_NECK_R;
+                    if (dxz < fR + p.sz * 0.5) {
+                        const nx = p.px / dxz, nz = p.pz / dxz;
+                        p.px = nx * (fR + p.sz * 0.55);
+                        p.pz = nz * (fR + p.sz * 0.55);
+                        const bounce = Math.abs(p.vy) * 0.15;
+                        p.vx = nx * (bounce + 0.5);
+                        p.vz = nz * (bounce + 0.5);
+                        p.vy *= 0.55;
+                    }
+                }
+            }
+        } else if (p.st === 1) {
+            p.slideT += dt;
+            const f = Math.pow(p.fric, dt * 60);
+            p.vx *= f; p.vz *= f;
+            p.px += p.vx * dt;
+            p.pz += p.vz * dt;
+            p.sq = Math.max(0.36, p.sq - dt * 2.8);
+            if (p.slideT >= p.maxSlide || Math.hypot(p.vx, p.vz) < 0.025) {
+                p.st = 2; p.vx = p.vz = 0;
+            }
+        }
+    }
+}
+
+function syncFoam() {
+    foam.count = parts.length;
+    for (let i = 0; i < parts.length; i++) {
+        const p = parts[i];
+        _p.set(p.px, p.py, p.pz);
+        _q.setFromEuler(new THREE.Euler(p.rx, p.ry, p.rz));
+        const sy = p.sz * p.sq;
+        const sxz = p.sz * (1 + (1 - p.sq) * 0.55);
+        _s.set(sxz, sy, sxz);
+        _m.compose(_p, _q, _s);
+        foam.setMatrixAt(i, _m);
+    }
+    foam.instanceMatrix.needsUpdate = true;
+}
+
+// ── Animation ──
+let liquidAcc = 0;
+const statsEl = document.getElementById('stats');
+
+function animate() {
+    requestAnimationFrame(animate);
+    const dt = Math.min(clock.getDelta(), 0.04);
+
+    if (erupting) {
+        eT += dt;
+        emit(dt, eT);
+        updateParts(dt);
+        syncFoam();
+
+        const prog = Math.min(1, eT / ERUPT_DUR);
+        const newLv = LIQUID_INIT * Math.max(0, 1 - prog * prog);
+        liquidAcc += dt;
+        if (Math.abs(newLv - liquidLvl) > 0.04 && liquidAcc > 0.08) {
+            liquidLvl = newLv;
+            rebuildLiquid(liquidLvl);
+            liquidAcc = 0;
+        }
+        const inten = intensity(eT);
+        glow.intensity = inten * 3.5;
+        glow.position.y = 12 + inten * 12;
+    }
+
+    statsEl.textContent = parts.length > 0 ? `粒子: ${parts.length}` : '';
+    controls.update();
+    renderer.render(scene, camera);
+}
+
+clock.start();
+animate();
+
+// ── UI ──
+document.getElementById('startBtn').addEventListener('click', function () {
+    if (erupting) return;
+    erupting = true; eT = 0;
+    this.disabled = true;
+    this.textContent = '⏳ 喷发中…';
+    setTimeout(() => { this.textContent = '✅ 喷发完成'; }, (ERUPT_DUR + 2) * 1000);
+});
+
+// ── Resize ──
+addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>

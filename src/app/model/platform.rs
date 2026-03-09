@@ -59,6 +59,7 @@ pub struct Platform {
     pub web_ua: &'static str,
     pub string: &'static str,
     pub ua_prefix: &'static str,
+    pub os_str: &'static str,
     // pub default_ua: &'static str,
 }
 
@@ -82,19 +83,19 @@ static PLATFORMS: Platforms = Platforms {
         web_ua: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
         string: "\"Windows\"",
         ua_prefix: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/",
-        // default_ua: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.0.0 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36",
+        os_str: "win32",
     },
     macos: Platform {
         web_ua: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
         string: "\"macOS\"",
         ua_prefix: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/",
-        // default_ua: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.0.0 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36",
+        os_str: "darwin",
     },
     linux: Platform {
         web_ua: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
         string: "\"Linux\"",
         ua_prefix: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/",
-        // default_ua: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.0.0 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36",
+        os_str: "linux",
     },
 };
 
@@ -112,6 +113,9 @@ impl Platform {
     }
     /// User-Agent 前缀
     pub const fn ua_prefix(&self) -> &'static str { self.ua_prefix }
+    pub const fn os_header_value(&self) -> http::header::HeaderValue {
+        unsafe { HeaderValue::from_static(self.os_str).into() }
+    }
     // const fn ua_suffix(&self) -> &'static str {
     //     use core::slice::SliceIndex as _;
     //     unsafe {

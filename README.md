@@ -45,9 +45,184 @@ token2,checksum2
 
 ### 模型列表
 
-写死了，后续也不会会支持自定义模型列表，因为本身就支持动态更新，详见[更新模型列表说明](#更新模型列表说明)
+内置模型列表如下，程序同时支持动态更新，详见[更新模型列表说明](#更新模型列表说明)。
 
-打开程序自己看，以实际为准，这里不再赘述。
+#### Cursor
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `default` | Auto | - | ✅ | ✅ |
+| `composer-1.5` | Composer 1.5 | - | ✅ | ✅ |
+| `composer-1` | Composer 1 | - | ✅ | ✅ |
+| `cursor-small` | Cursor Small | - | - | - |
+| `cursor-fast` | Cursor Fast | - | - | - |
+
+#### Anthropic (Claude)
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `claude-4.6-sonnet-medium` | Sonnet 4.6 | - | ✅ | ✅ |
+| `claude-4.6-sonnet-medium-thinking` | Sonnet 4.6 | ✅ | ✅ | ✅ |
+| `claude-4.6-opus-high` | Opus 4.6 | - | ✅ | ✅ |
+| `claude-4.6-opus-high-thinking` | Opus 4.6 | ✅ | ✅ | ✅ |
+| `claude-4.6-opus-max` | Opus 4.6 Max | - | ✅ | Max Only |
+| `claude-4.6-opus-max-thinking` | Opus 4.6 Max | ✅ | ✅ | Max Only |
+| `claude-4.5-opus-high` | Opus 4.5 | - | ✅ | ✅ |
+| `claude-4.5-opus-high-thinking` | Opus 4.5 | ✅ | ✅ | ✅ |
+| `claude-4.5-sonnet` | Sonnet 4.5 | - | ✅ | ✅ |
+| `claude-4.5-sonnet-thinking` | Sonnet 4.5 | ✅ | ✅ | ✅ |
+| `claude-4.5-haiku` | Haiku 4.5 | - | ✅ | ✅ |
+| `claude-4.5-haiku-thinking` | Haiku 4.5 | ✅ | ✅ | ✅ |
+| `claude-4-opus` | Opus 4.1 | - | ✅ | Max Only |
+| `claude-4-opus-thinking` | Opus 4.1 | ✅ | ✅ | Max Only |
+| `claude-4-opus-legacy` | Opus 4 | - | ✅ | Max Only |
+| `claude-4-opus-thinking-legacy` | Opus 4 | ✅ | ✅ | Max Only |
+| `claude-4-sonnet` | Sonnet 4 | - | ✅ | ✅ |
+| `claude-4-sonnet-thinking` | Sonnet 4 | ✅ | ✅ | ✅ |
+| `claude-4-sonnet-1m` | Sonnet 4 1M | - | ✅ | Max Only |
+| `claude-4-sonnet-1m-thinking` | Sonnet 4 1M | ✅ | ✅ | Max Only |
+
+#### Google (Gemini)
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `gemini-3-pro` | Gemini 3 Pro | ✅ | ✅ | ✅ |
+| `gemini-3-flash` | Gemini 3 Flash | ✅ | ✅ | ✅ |
+| `gemini-2.5-pro-preview-05-06` | Gemini 2.5 Pro | ✅ | ✅ | ✅ |
+| `gemini-2.5-flash-preview-05-20` | Gemini 2.5 Flash | ✅ | ✅ | ✅ |
+
+#### OpenAI
+
+<details>
+<summary>GPT-5.4 系列（6个）</summary>
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `gpt-5.4-medium` | GPT-5.4 | ✅ | ✅ | ✅ |
+| `gpt-5.4-medium-fast` | GPT-5.4 Fast | ✅ | ✅ | ✅ |
+| `gpt-5.4-high` | GPT-5.4 High | ✅ | ✅ | ✅ |
+| `gpt-5.4-high-fast` | GPT-5.4 High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.4-xhigh` | GPT-5.4 Extra High | ✅ | ✅ | ✅ |
+| `gpt-5.4-xhigh-fast` | GPT-5.4 Extra High Fast | ✅ | ✅ | ✅ |
+
+</details>
+
+<details>
+<summary>GPT-5.3 Codex 系列（11个）</summary>
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `gpt-5.3-codex` | GPT-5.3 Codex | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-fast` | GPT-5.3 Codex Fast | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-high` | GPT-5.3 Codex High | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-high-fast` | GPT-5.3 Codex High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-low` | GPT-5.3 Codex Low | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-low-fast` | GPT-5.3 Codex Low Fast | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-xhigh` | GPT-5.3 Codex Extra High | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-xhigh-fast` | GPT-5.3 Codex Extra High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.3-codex-spark` | GPT-5.3 Codex Spark | ✅ | - | ✅ |
+| `gpt-5.3-codex-spark-preview-high` | GPT-5.3 Codex Spark High | ✅ | - | ✅ |
+| `gpt-5.3-codex-spark-preview-low` | GPT-5.3 Codex Spark Low | ✅ | - | ✅ |
+
+</details>
+
+<details>
+<summary>GPT-5.2 系列（16个）</summary>
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `gpt-5.2` | GPT-5.2 | ✅ | ✅ | ✅ |
+| `gpt-5.2-fast` | GPT-5.2 Fast | ✅ | ✅ | ✅ |
+| `gpt-5.2-high` | GPT-5.2 High | ✅ | ✅ | ✅ |
+| `gpt-5.2-high-fast` | GPT-5.2 High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.2-low` | GPT-5.2 Low | ✅ | ✅ | ✅ |
+| `gpt-5.2-low-fast` | GPT-5.2 Low Fast | ✅ | ✅ | ✅ |
+| `gpt-5.2-xhigh` | GPT-5.2 Extra High | ✅ | ✅ | ✅ |
+| `gpt-5.2-xhigh-fast` | GPT-5.2 Extra High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex` | GPT-5.2 Codex | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex-fast` | GPT-5.2 Codex Fast | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex-high` | GPT-5.2 Codex High | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex-high-fast` | GPT-5.2 Codex High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex-low` | GPT-5.2 Codex Low | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex-low-fast` | GPT-5.2 Codex Low Fast | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex-xhigh` | GPT-5.2 Codex Extra High | ✅ | ✅ | ✅ |
+| `gpt-5.2-codex-xhigh-fast` | GPT-5.2 Codex Extra High Fast | ✅ | ✅ | ✅ |
+
+</details>
+
+<details>
+<summary>GPT-5.1 系列（25个）</summary>
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `gpt-5.1-codex-max` | GPT-5.1 Codex Max | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-max-high` | GPT-5.1 Codex Max High | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-max-low` | GPT-5.1 Codex Max Low | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-max-xhigh` | GPT-5.1 Codex Max Extra High | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-max-medium-fast` | GPT-5.1 Codex Max Medium Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-max-high-fast` | GPT-5.1 Codex Max High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-max-low-fast` | GPT-5.1 Codex Max Low Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-max-xhigh-fast` | GPT-5.1 Codex Max Extra High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex` | GPT-5.1 Codex | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-high` | GPT-5.1 Codex High | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-fast` | GPT-5.1 Codex Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-high-fast` | GPT-5.1 Codex High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-low` | GPT-5.1 Codex Low | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-low-fast` | GPT-5.1 Codex Low Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1` | GPT-5.1 | ✅ | ✅ | ✅ |
+| `gpt-5.1-fast` | GPT-5.1 Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-high` | GPT-5.1 High | ✅ | ✅ | ✅ |
+| `gpt-5.1-high-fast` | GPT-5.1 High Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-low` | GPT-5.1 Low | ✅ | ✅ | ✅ |
+| `gpt-5.1-low-fast` | GPT-5.1 Low Fast | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-mini` | GPT-5.1 Codex Mini | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-mini-high` | GPT-5.1 Codex Mini High | ✅ | ✅ | ✅ |
+| `gpt-5.1-codex-mini-low` | GPT-5.1 Codex Mini Low | ✅ | ✅ | ✅ |
+| `o3-pro` | o3 Pro | ✅ | ✅ | Max Only |
+| `gpt-5-pro` | GPT-5 Pro | ✅ | ✅ | Max Only |
+
+</details>
+
+<details>
+<summary>其他 OpenAI 模型（4个）</summary>
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `o3` | o3 | ✅ | ✅ | ✅ |
+| `gpt-4.1` | GPT-4.1 | - | ✅ | ✅ |
+| `gpt-5-mini` | GPT-5 Mini | ✅ | ✅ | ✅ |
+| `gpt-5-nano` | GPT-5 Nano | ✅ | ✅ | ✅ |
+
+</details>
+
+#### DeepSeek
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `deepseek-r1-0528` | DeepSeek R1 | ✅ | - | ✅ |
+| `deepseek-v3.1` | DeepSeek V3.1 | - | - | ✅ |
+
+#### xAI (Grok)
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `grok-code-fast-1` | Grok Code | ✅ | - | ✅ |
+| `grok-4` | Grok 4 | ✅ | ✅ | ✅ |
+| `grok-4-fast-reasoning` | Grok 4 Fast | ✅ | ✅ | ✅ |
+| `grok-4-fast-non-reasoning` | Grok 4 Fast | - | ✅ | ✅ |
+
+#### MoonshotAI (Kimi)
+
+| 模型 ID | 显示名称 | Thinking | 图像 | Max |
+|---------|----------|:--------:|:----:|:---:|
+| `kimi-k2-instruct` | Kimi K2 | - | - | ✅ |
+| `kimi-k2.5` | Kimi K2.5 | ✅ | - | ✅ |
+
+> **说明**：
+> - **Thinking**：支持思维链推理模式
+> - **图像**：支持图像输入
+> - **Max**：✅ 表示同时支持普通模式和 Max 模式，**Max Only** 表示仅支持 Max 模式
+> - 模型列表支持动态更新，以运行时 `/v1/models` 接口返回为准
 
 ## 接口说明
 

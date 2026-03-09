@@ -56,6 +56,9 @@ def_header_value! {
     (U_EQ_0, "u=0"),
     (U_EQ_1_I, "u=1, i"),
     (CONNECT_ES, "connect-es/1.6.1"),
+    (X64, "x64"),
+    (DESKTOP, "desktop"),
+    (IDE, "ide"),
     (NOT_A_BRAND, "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\""),
     (MOBILE_NO, "?0"),
     (VSCODE_ORIGIN, "vscode-file://vscode-app"),
@@ -104,6 +107,10 @@ def_header_name! {
     (PRIORITY, "priority"),
     (STAINLESS_OS, "x-stainless-os"),
     (STAINLESS_ARCH, "x-stainless-arch"),
+    (CURSOR_CLIENT_ARCH, "x-cursor-client-arch"),
+    (CURSOR_CLIENT_DEVICE_TYPE, "x-cursor-client-device-type"),
+    (CURSOR_CLIENT_OS, "x-cursor-client-os"),
+    (CURSOR_CLIENT_TYPE, "x-cursor-client-type"),
 }
 
 #[allow(unused_imports)]
