@@ -55,13 +55,23 @@ def_const_models!(
     // 默认模型
     DEFAULT => "default",
 
-    // Anthropic 模型
+    // Anthropic 模型 (4.6)
+    CLAUDE_4_6_OPUS_HIGH => "claude-4.6-opus-high",
+    CLAUDE_4_6_OPUS_HIGH_THINKING => "claude-4.6-opus-high-thinking",
+    CLAUDE_4_6_OPUS_MAX => "claude-4.6-opus-max",
+    CLAUDE_4_6_OPUS_MAX_THINKING => "claude-4.6-opus-max-thinking",
+    CLAUDE_4_6_SONNET_MEDIUM => "claude-4.6-sonnet-medium",
+    CLAUDE_4_6_SONNET_MEDIUM_THINKING => "claude-4.6-sonnet-medium-thinking",
+
+    // Anthropic 模型 (4.5)
     CLAUDE_4_5_OPUS_HIGH => "claude-4.5-opus-high",
     CLAUDE_4_5_OPUS_HIGH_THINKING => "claude-4.5-opus-high-thinking",
     CLAUDE_4_5_SONNET => "claude-4.5-sonnet",
     CLAUDE_4_5_SONNET_THINKING => "claude-4.5-sonnet-thinking",
     CLAUDE_4_5_HAIKU => "claude-4.5-haiku",
     CLAUDE_4_5_HAIKU_THINKING => "claude-4.5-haiku-thinking",
+
+    // Anthropic 模型 (4)
     CLAUDE_4_SONNET => "claude-4-sonnet",
     CLAUDE_4_SONNET_THINKING => "claude-4-sonnet-thinking",
     CLAUDE_4_SONNET_1M => "claude-4-sonnet-1m",
@@ -73,27 +83,63 @@ def_const_models!(
     CLAUDE_4_OPUS_LEGACY => "claude-4-opus-legacy",
     CLAUDE_4_OPUS_THINKING_LEGACY => "claude-4-opus-thinking-legacy",
 
-    // Anthropic 模型 (4.6)
-    CLAUDE_4_6_OPUS_HIGH => "claude-4.6-opus-high",
-    CLAUDE_4_6_OPUS_HIGH_THINKING => "claude-4.6-opus-high-thinking",
-    CLAUDE_4_6_SONNET => "claude-4.6-sonnet",
-    CLAUDE_4_6_SONNET_THINKING => "claude-4.6-sonnet-thinking",
-    CLAUDE_4_6_HAIKU => "claude-4.6-haiku",
-    CLAUDE_4_6_HAIKU_THINKING => "claude-4.6-haiku-thinking",
-
     // Cursor 模型
+    COMPOSER_1_5 => "composer-1.5",
     COMPOSER_1 => "composer-1",
     CURSOR_SMALL => "cursor-small",
 
     // Google 模型
     GEMINI_3_PRO => "gemini-3-pro",
     GEMINI_3_PRO_PREVIEW => "gemini-3-pro-preview",
+    GEMINI_3_1_PRO_PREVIEW => "gemini-3.1-pro-preview",
+    GEMINI_3_FLASH => "gemini-3-flash",
+    GEMINI_3_FLASH_PREVIEW => "gemini-3-flash-preview",
     GEMINI_2_5_PRO_PREVIEW_05_06 => "gemini-2.5-pro-preview-05-06",
     GEMINI_2_5_PRO => "gemini-2.5-pro",
     GEMINI_2_5_FLASH_PREVIEW_05_20 => "gemini-2.5-flash-preview-05-20",
     GEMINI_2_5_FLASH => "gemini-2.5-flash",
 
-    // OpenAI 模型
+    // OpenAI 模型 (5.4)
+    GPT_5_4_MEDIUM => "gpt-5.4-medium",
+    GPT_5_4_MEDIUM_FAST => "gpt-5.4-medium-fast",
+    GPT_5_4_HIGH => "gpt-5.4-high",
+    GPT_5_4_HIGH_FAST => "gpt-5.4-high-fast",
+    GPT_5_4_XHIGH => "gpt-5.4-xhigh",
+    GPT_5_4_XHIGH_FAST => "gpt-5.4-xhigh-fast",
+
+    // OpenAI 模型 (5.3 Codex)
+    GPT_5_3_CODEX => "gpt-5.3-codex",
+    GPT_5_3_CODEX_FAST => "gpt-5.3-codex-fast",
+    GPT_5_3_CODEX_HIGH => "gpt-5.3-codex-high",
+    GPT_5_3_CODEX_HIGH_FAST => "gpt-5.3-codex-high-fast",
+    GPT_5_3_CODEX_LOW => "gpt-5.3-codex-low",
+    GPT_5_3_CODEX_LOW_FAST => "gpt-5.3-codex-low-fast",
+    GPT_5_3_CODEX_XHIGH => "gpt-5.3-codex-xhigh",
+    GPT_5_3_CODEX_XHIGH_FAST => "gpt-5.3-codex-xhigh-fast",
+    GPT_5_3_CODEX_SPARK => "gpt-5.3-codex-spark",
+    GPT_5_3_CODEX_SPARK_PREVIEW => "gpt-5.3-codex-spark-preview",
+    GPT_5_3_CODEX_SPARK_PREVIEW_HIGH => "gpt-5.3-codex-spark-preview-high",
+    GPT_5_3_CODEX_SPARK_PREVIEW_LOW => "gpt-5.3-codex-spark-preview-low",
+
+    // OpenAI 模型 (5.2)
+    GPT_5_2 => "gpt-5.2",
+    GPT_5_2_FAST => "gpt-5.2-fast",
+    GPT_5_2_HIGH => "gpt-5.2-high",
+    GPT_5_2_HIGH_FAST => "gpt-5.2-high-fast",
+    GPT_5_2_LOW => "gpt-5.2-low",
+    GPT_5_2_LOW_FAST => "gpt-5.2-low-fast",
+    GPT_5_2_XHIGH => "gpt-5.2-xhigh",
+    GPT_5_2_XHIGH_FAST => "gpt-5.2-xhigh-fast",
+    GPT_5_2_CODEX => "gpt-5.2-codex",
+    GPT_5_2_CODEX_FAST => "gpt-5.2-codex-fast",
+    GPT_5_2_CODEX_HIGH => "gpt-5.2-codex-high",
+    GPT_5_2_CODEX_HIGH_FAST => "gpt-5.2-codex-high-fast",
+    GPT_5_2_CODEX_LOW => "gpt-5.2-codex-low",
+    GPT_5_2_CODEX_LOW_FAST => "gpt-5.2-codex-low-fast",
+    GPT_5_2_CODEX_XHIGH => "gpt-5.2-codex-xhigh",
+    GPT_5_2_CODEX_XHIGH_FAST => "gpt-5.2-codex-xhigh-fast",
+
+    // OpenAI 模型 (5.1)
     GPT_5_1_CODEX_MAX => "gpt-5.1-codex-max",
     GPT_5_1_CODEX_MAX_HIGH => "gpt-5.1-codex-max-high",
     GPT_5_1_CODEX_MAX_LOW => "gpt-5.1-codex-max-low",
@@ -139,6 +185,8 @@ def_const_models!(
     // MoonshotAI 模型
     KIMI_K2_INSTRUCT => "kimi-k2-instruct",
     ACCOUNTS_FIREWORKS_MODELS_KIMI_K2_INSTRUCT => "accounts/fireworks/models/kimi-k2-instruct",
+    KIMI_K2_5 => "kimi-k2.5",
+    ACCOUNTS_FIREWORKS_MODELS_KIMI_K2P5 => "accounts/fireworks/models/kimi-k2p5",
 
     // Cursor 模型 (legacy)
     CURSOR_FAST => "cursor-fast",
@@ -524,6 +572,8 @@ create_models! {
     CURSOR => [
         ModelIds::new(DEFAULT)
             .with_client_id("Auto"),
+        ModelIds::new(COMPOSER_1_5)
+            .with_client_id("Composer 1.5"),
         ModelIds::new(COMPOSER_1)
             .with_client_id("Composer 1"),
         ModelIds::new(CURSOR_SMALL)
@@ -533,18 +583,18 @@ create_models! {
     ],
 
     ANTHROPIC => [
+        ModelIds::new(CLAUDE_4_6_SONNET_MEDIUM)
+            .with_client_id("Sonnet 4.6"),
+        ModelIds::new(CLAUDE_4_6_SONNET_MEDIUM_THINKING)
+            .with_client_id("Sonnet 4.6"),
         ModelIds::new(CLAUDE_4_6_OPUS_HIGH)
             .with_client_id("Opus 4.6"),
         ModelIds::new(CLAUDE_4_6_OPUS_HIGH_THINKING)
             .with_client_id("Opus 4.6"),
-        ModelIds::new(CLAUDE_4_6_SONNET)
-            .with_client_id("Sonnet 4.6"),
-        ModelIds::new(CLAUDE_4_6_SONNET_THINKING)
-            .with_client_id("Sonnet 4.6"),
-        ModelIds::new(CLAUDE_4_6_HAIKU)
-            .with_client_id("Haiku 4.6"),
-        ModelIds::new(CLAUDE_4_6_HAIKU_THINKING)
-            .with_client_id("Haiku 4.6"),
+        ModelIds::new(CLAUDE_4_6_OPUS_MAX)
+            .with_client_id("Opus 4.6 Max"),
+        ModelIds::new(CLAUDE_4_6_OPUS_MAX_THINKING)
+            .with_client_id("Opus 4.6 Max"),
         ModelIds::new(CLAUDE_4_5_OPUS_HIGH)
             .with_client_id("Opus 4.5"),
         ModelIds::new(CLAUDE_4_5_OPUS_HIGH_THINKING)
@@ -582,7 +632,10 @@ create_models! {
     GOOGLE => [
         ModelIds::new(GEMINI_3_PRO)
             .with_client_id("Gemini 3 Pro")
-            .with_server_id(GEMINI_3_PRO_PREVIEW),
+            .with_server_id(GEMINI_3_1_PRO_PREVIEW),
+        ModelIds::new(GEMINI_3_FLASH)
+            .with_client_id("Gemini 3 Flash")
+            .with_server_id(GEMINI_3_FLASH_PREVIEW),
         ModelIds::new(GEMINI_2_5_PRO_PREVIEW_05_06)
             .with_client_id("Gemini 2.5 Pro")
             .with_server_id(GEMINI_2_5_PRO),
@@ -592,6 +645,77 @@ create_models! {
     ],
 
     OPENAI => [
+        // GPT-5.4
+        ModelIds::new(GPT_5_4_MEDIUM)
+            .with_client_id("GPT-5.4"),
+        ModelIds::new(GPT_5_4_MEDIUM_FAST)
+            .with_client_id("GPT-5.4 Fast"),
+        ModelIds::new(GPT_5_4_HIGH)
+            .with_client_id("GPT-5.4 High"),
+        ModelIds::new(GPT_5_4_HIGH_FAST)
+            .with_client_id("GPT-5.4 High Fast"),
+        ModelIds::new(GPT_5_4_XHIGH)
+            .with_client_id("GPT-5.4 Extra High"),
+        ModelIds::new(GPT_5_4_XHIGH_FAST)
+            .with_client_id("GPT-5.4 Extra High Fast"),
+        // GPT-5.3 Codex
+        ModelIds::new(GPT_5_3_CODEX)
+            .with_client_id("GPT-5.3 Codex"),
+        ModelIds::new(GPT_5_3_CODEX_FAST)
+            .with_client_id("GPT-5.3 Codex Fast"),
+        ModelIds::new(GPT_5_3_CODEX_HIGH)
+            .with_client_id("GPT-5.3 Codex High"),
+        ModelIds::new(GPT_5_3_CODEX_HIGH_FAST)
+            .with_client_id("GPT-5.3 Codex High Fast"),
+        ModelIds::new(GPT_5_3_CODEX_LOW)
+            .with_client_id("GPT-5.3 Codex Low"),
+        ModelIds::new(GPT_5_3_CODEX_LOW_FAST)
+            .with_client_id("GPT-5.3 Codex Low Fast"),
+        ModelIds::new(GPT_5_3_CODEX_XHIGH)
+            .with_client_id("GPT-5.3 Codex Extra High"),
+        ModelIds::new(GPT_5_3_CODEX_XHIGH_FAST)
+            .with_client_id("GPT-5.3 Codex Extra High Fast"),
+        ModelIds::new(GPT_5_3_CODEX_SPARK)
+            .with_client_id("GPT-5.3 Codex Spark")
+            .with_server_id(GPT_5_3_CODEX_SPARK_PREVIEW),
+        ModelIds::new(GPT_5_3_CODEX_SPARK_PREVIEW_HIGH)
+            .with_client_id("GPT-5.3 Codex Spark High"),
+        ModelIds::new(GPT_5_3_CODEX_SPARK_PREVIEW_LOW)
+            .with_client_id("GPT-5.3 Codex Spark Low"),
+        // GPT-5.2
+        ModelIds::new(GPT_5_2)
+            .with_client_id("GPT-5.2"),
+        ModelIds::new(GPT_5_2_FAST)
+            .with_client_id("GPT-5.2 Fast"),
+        ModelIds::new(GPT_5_2_HIGH)
+            .with_client_id("GPT-5.2 High"),
+        ModelIds::new(GPT_5_2_HIGH_FAST)
+            .with_client_id("GPT-5.2 High Fast"),
+        ModelIds::new(GPT_5_2_LOW)
+            .with_client_id("GPT-5.2 Low"),
+        ModelIds::new(GPT_5_2_LOW_FAST)
+            .with_client_id("GPT-5.2 Low Fast"),
+        ModelIds::new(GPT_5_2_XHIGH)
+            .with_client_id("GPT-5.2 Extra High"),
+        ModelIds::new(GPT_5_2_XHIGH_FAST)
+            .with_client_id("GPT-5.2 Extra High Fast"),
+        ModelIds::new(GPT_5_2_CODEX)
+            .with_client_id("GPT-5.2 Codex"),
+        ModelIds::new(GPT_5_2_CODEX_FAST)
+            .with_client_id("GPT-5.2 Codex Fast"),
+        ModelIds::new(GPT_5_2_CODEX_HIGH)
+            .with_client_id("GPT-5.2 Codex High"),
+        ModelIds::new(GPT_5_2_CODEX_HIGH_FAST)
+            .with_client_id("GPT-5.2 Codex High Fast"),
+        ModelIds::new(GPT_5_2_CODEX_LOW)
+            .with_client_id("GPT-5.2 Codex Low"),
+        ModelIds::new(GPT_5_2_CODEX_LOW_FAST)
+            .with_client_id("GPT-5.2 Codex Low Fast"),
+        ModelIds::new(GPT_5_2_CODEX_XHIGH)
+            .with_client_id("GPT-5.2 Codex Extra High"),
+        ModelIds::new(GPT_5_2_CODEX_XHIGH_FAST)
+            .with_client_id("GPT-5.2 Codex Extra High Fast"),
+        // GPT-5.1
         ModelIds::new(GPT_5_1_CODEX_MAX)
             .with_client_id("GPT-5.1 Codex Max"),
         ModelIds::new(GPT_5_1_CODEX_MAX_HIGH)
@@ -638,6 +762,7 @@ create_models! {
             .with_client_id("GPT-5.1 Codex Mini High"),
         ModelIds::new(GPT_5_1_CODEX_MINI_LOW)
             .with_client_id("GPT-5.1 Codex Mini Low"),
+        // Other OpenAI
         ModelIds::new(O3),
         ModelIds::new(GPT_4_1)
             .with_client_id("GPT-4.1"),
@@ -674,22 +799,67 @@ create_models! {
         ModelIds::new(KIMI_K2_INSTRUCT)
             .with_client_id("Kimi K2")
             .with_server_id(ACCOUNTS_FIREWORKS_MODELS_KIMI_K2_INSTRUCT),
+        ModelIds::new(KIMI_K2_5)
+            .with_client_id("Kimi K2.5")
+            .with_server_id(ACCOUNTS_FIREWORKS_MODELS_KIMI_K2P5),
     ],
 }
 
 pub const FREE_MODELS: [&str; 6] =
     [GPT_4O_MINI, CURSOR_FAST, CURSOR_SMALL, DEEPSEEK_V3, DEEPSEEK_V3_1, GROK_3_MINI];
 
-// pub(super) const LONG_CONTEXT_MODELS: [&str; 4] =
-//     [GPT_4O_128K, GEMINI_1_5_FLASH_500K, CLAUDE_3_HAIKU_200K, CLAUDE_3_5_SONNET_200K];
-
 // 支持思考的模型
-const SUPPORTED_THINKING_MODELS: [&str; 45] = [
+const SUPPORTED_THINKING_MODELS: &[&str] = &[
+    // Claude 4.6
     CLAUDE_4_6_OPUS_HIGH_THINKING,
-    CLAUDE_4_6_SONNET_THINKING,
-    CLAUDE_4_6_HAIKU_THINKING,
+    CLAUDE_4_6_OPUS_MAX_THINKING,
+    CLAUDE_4_6_SONNET_MEDIUM_THINKING,
+    // Claude 4.5
     CLAUDE_4_5_OPUS_HIGH_THINKING,
     CLAUDE_4_5_SONNET_THINKING,
+    CLAUDE_4_5_HAIKU_THINKING,
+    // Claude 4
+    CLAUDE_4_OPUS_THINKING,
+    CLAUDE_4_OPUS_THINKING_LEGACY,
+    CLAUDE_4_SONNET_THINKING,
+    CLAUDE_4_SONNET_1M_THINKING,
+    // GPT-5.4
+    GPT_5_4_MEDIUM,
+    GPT_5_4_MEDIUM_FAST,
+    GPT_5_4_HIGH,
+    GPT_5_4_HIGH_FAST,
+    GPT_5_4_XHIGH,
+    GPT_5_4_XHIGH_FAST,
+    // GPT-5.3 Codex
+    GPT_5_3_CODEX,
+    GPT_5_3_CODEX_FAST,
+    GPT_5_3_CODEX_HIGH,
+    GPT_5_3_CODEX_HIGH_FAST,
+    GPT_5_3_CODEX_LOW,
+    GPT_5_3_CODEX_LOW_FAST,
+    GPT_5_3_CODEX_XHIGH,
+    GPT_5_3_CODEX_XHIGH_FAST,
+    GPT_5_3_CODEX_SPARK,
+    GPT_5_3_CODEX_SPARK_PREVIEW_HIGH,
+    GPT_5_3_CODEX_SPARK_PREVIEW_LOW,
+    // GPT-5.2
+    GPT_5_2,
+    GPT_5_2_FAST,
+    GPT_5_2_HIGH,
+    GPT_5_2_HIGH_FAST,
+    GPT_5_2_LOW,
+    GPT_5_2_LOW_FAST,
+    GPT_5_2_XHIGH,
+    GPT_5_2_XHIGH_FAST,
+    GPT_5_2_CODEX,
+    GPT_5_2_CODEX_FAST,
+    GPT_5_2_CODEX_HIGH,
+    GPT_5_2_CODEX_HIGH_FAST,
+    GPT_5_2_CODEX_LOW,
+    GPT_5_2_CODEX_LOW_FAST,
+    GPT_5_2_CODEX_XHIGH,
+    GPT_5_2_CODEX_XHIGH_FAST,
+    // GPT-5.1
     GPT_5_1_CODEX_MAX,
     GPT_5_1_CODEX_MAX_HIGH,
     GPT_5_1_CODEX_MAX_LOW,
@@ -710,68 +880,47 @@ const SUPPORTED_THINKING_MODELS: [&str; 45] = [
     GPT_5_1_HIGH_FAST,
     GPT_5_1_LOW,
     GPT_5_1_LOW_FAST,
-    GEMINI_3_PRO,
     GPT_5_1_CODEX_MINI,
     GPT_5_1_CODEX_MINI_HIGH,
     GPT_5_1_CODEX_MINI_LOW,
-    CLAUDE_4_5_HAIKU_THINKING,
-    GROK_CODE_FAST_1,
-    CLAUDE_4_OPUS_THINKING,
-    CLAUDE_4_OPUS_THINKING_LEGACY,
-    CLAUDE_4_SONNET_THINKING,
-    CLAUDE_4_SONNET_1M_THINKING,
+    // Google
+    GEMINI_3_PRO,
+    GEMINI_3_FLASH,
+    GEMINI_2_5_PRO_PREVIEW_05_06,
+    GEMINI_2_5_FLASH_PREVIEW_05_20,
+    // Other
     O3,
     GPT_5_MINI,
     GPT_5_NANO,
     O3_PRO,
     GPT_5_PRO,
-    GEMINI_2_5_PRO_PREVIEW_05_06,
-    GEMINI_2_5_FLASH_PREVIEW_05_20,
     DEEPSEEK_R1_0528,
+    GROK_CODE_FAST_1,
     GROK_4,
     GROK_4_FAST_REASONING,
+    KIMI_K2_5,
 ];
 
 // 支持图像的模型（DEFAULT 始终支持）
-const SUPPORTED_IMAGE_MODELS: [&str; 57] = [
+const SUPPORTED_IMAGE_MODELS: &[&str] = &[
     DEFAULT,
+    COMPOSER_1_5,
     COMPOSER_1,
+    // Claude 4.6
+    CLAUDE_4_6_SONNET_MEDIUM,
+    CLAUDE_4_6_SONNET_MEDIUM_THINKING,
     CLAUDE_4_6_OPUS_HIGH,
     CLAUDE_4_6_OPUS_HIGH_THINKING,
-    CLAUDE_4_6_SONNET,
-    CLAUDE_4_6_SONNET_THINKING,
-    CLAUDE_4_6_HAIKU,
-    CLAUDE_4_6_HAIKU_THINKING,
+    CLAUDE_4_6_OPUS_MAX,
+    CLAUDE_4_6_OPUS_MAX_THINKING,
+    // Claude 4.5
     CLAUDE_4_5_OPUS_HIGH,
     CLAUDE_4_5_OPUS_HIGH_THINKING,
     CLAUDE_4_5_SONNET,
     CLAUDE_4_5_SONNET_THINKING,
-    GPT_5_1_CODEX_MAX,
-    GPT_5_1_CODEX_MAX_HIGH,
-    GPT_5_1_CODEX_MAX_LOW,
-    GPT_5_1_CODEX_MAX_XHIGH,
-    GPT_5_1_CODEX_MAX_MEDIUM_FAST,
-    GPT_5_1_CODEX_MAX_HIGH_FAST,
-    GPT_5_1_CODEX_MAX_LOW_FAST,
-    GPT_5_1_CODEX_MAX_XHIGH_FAST,
-    GPT_5_1_CODEX,
-    GPT_5_1_CODEX_HIGH,
-    GPT_5_1_CODEX_FAST,
-    GPT_5_1_CODEX_HIGH_FAST,
-    GPT_5_1_CODEX_LOW,
-    GPT_5_1_CODEX_LOW_FAST,
-    GPT_5_1,
-    GPT_5_1_FAST,
-    GPT_5_1_HIGH,
-    GPT_5_1_HIGH_FAST,
-    GPT_5_1_LOW,
-    GPT_5_1_LOW_FAST,
-    GEMINI_3_PRO,
-    GPT_5_1_CODEX_MINI,
-    GPT_5_1_CODEX_MINI_HIGH,
-    GPT_5_1_CODEX_MINI_LOW,
     CLAUDE_4_5_HAIKU,
     CLAUDE_4_5_HAIKU_THINKING,
+    // Claude 4
     CLAUDE_4_OPUS,
     CLAUDE_4_OPUS_THINKING,
     CLAUDE_4_OPUS_LEGACY,
@@ -780,33 +929,40 @@ const SUPPORTED_IMAGE_MODELS: [&str; 57] = [
     CLAUDE_4_SONNET_THINKING,
     CLAUDE_4_SONNET_1M,
     CLAUDE_4_SONNET_1M_THINKING,
-    O3,
-    GPT_4_1,
-    GPT_5_MINI,
-    GPT_5_NANO,
-    O3_PRO,
-    GPT_5_PRO,
-    GEMINI_2_5_PRO_PREVIEW_05_06,
-    GEMINI_2_5_FLASH_PREVIEW_05_20,
-    GROK_4,
-    GROK_4_FAST_REASONING,
-    GROK_4_FAST_NON_REASONING,
-];
-
-// 支持Max与非Max的模型
-const SUPPORTED_MAX_MODELS: [&str; 53] = [
-    DEFAULT,
-    COMPOSER_1,
-    CLAUDE_4_6_OPUS_HIGH,
-    CLAUDE_4_6_OPUS_HIGH_THINKING,
-    CLAUDE_4_6_SONNET,
-    CLAUDE_4_6_SONNET_THINKING,
-    CLAUDE_4_6_HAIKU,
-    CLAUDE_4_6_HAIKU_THINKING,
-    CLAUDE_4_5_OPUS_HIGH,
-    CLAUDE_4_5_OPUS_HIGH_THINKING,
-    CLAUDE_4_5_SONNET,
-    CLAUDE_4_5_SONNET_THINKING,
+    // GPT-5.4
+    GPT_5_4_MEDIUM,
+    GPT_5_4_MEDIUM_FAST,
+    GPT_5_4_HIGH,
+    GPT_5_4_HIGH_FAST,
+    GPT_5_4_XHIGH,
+    GPT_5_4_XHIGH_FAST,
+    // GPT-5.3 Codex
+    GPT_5_3_CODEX,
+    GPT_5_3_CODEX_FAST,
+    GPT_5_3_CODEX_HIGH,
+    GPT_5_3_CODEX_HIGH_FAST,
+    GPT_5_3_CODEX_LOW,
+    GPT_5_3_CODEX_LOW_FAST,
+    GPT_5_3_CODEX_XHIGH,
+    GPT_5_3_CODEX_XHIGH_FAST,
+    // GPT-5.2
+    GPT_5_2,
+    GPT_5_2_FAST,
+    GPT_5_2_HIGH,
+    GPT_5_2_HIGH_FAST,
+    GPT_5_2_LOW,
+    GPT_5_2_LOW_FAST,
+    GPT_5_2_XHIGH,
+    GPT_5_2_XHIGH_FAST,
+    GPT_5_2_CODEX,
+    GPT_5_2_CODEX_FAST,
+    GPT_5_2_CODEX_HIGH,
+    GPT_5_2_CODEX_HIGH_FAST,
+    GPT_5_2_CODEX_LOW,
+    GPT_5_2_CODEX_LOW_FAST,
+    GPT_5_2_CODEX_XHIGH,
+    GPT_5_2_CODEX_XHIGH_FAST,
+    // GPT-5.1
     GPT_5_1_CODEX_MAX,
     GPT_5_1_CODEX_MAX_HIGH,
     GPT_5_1_CODEX_MAX_LOW,
@@ -827,31 +983,130 @@ const SUPPORTED_MAX_MODELS: [&str; 53] = [
     GPT_5_1_HIGH_FAST,
     GPT_5_1_LOW,
     GPT_5_1_LOW_FAST,
-    GEMINI_3_PRO,
     GPT_5_1_CODEX_MINI,
     GPT_5_1_CODEX_MINI_HIGH,
     GPT_5_1_CODEX_MINI_LOW,
-    CLAUDE_4_5_HAIKU,
-    CLAUDE_4_5_HAIKU_THINKING,
-    GROK_CODE_FAST_1,
-    CLAUDE_4_SONNET,
-    CLAUDE_4_SONNET_THINKING,
+    // Google
+    GEMINI_3_PRO,
+    GEMINI_3_FLASH,
+    GEMINI_2_5_PRO_PREVIEW_05_06,
+    GEMINI_2_5_FLASH_PREVIEW_05_20,
+    // Other
     O3,
     GPT_4_1,
     GPT_5_MINI,
     GPT_5_NANO,
+    O3_PRO,
+    GPT_5_PRO,
+    GROK_4,
+    GROK_4_FAST_REASONING,
+    GROK_4_FAST_NON_REASONING,
+];
+
+// 支持Max与非Max的模型
+const SUPPORTED_MAX_MODELS: &[&str] = &[
+    DEFAULT,
+    COMPOSER_1_5,
+    COMPOSER_1,
+    // Claude 4.6
+    CLAUDE_4_6_SONNET_MEDIUM,
+    CLAUDE_4_6_SONNET_MEDIUM_THINKING,
+    CLAUDE_4_6_OPUS_HIGH,
+    CLAUDE_4_6_OPUS_HIGH_THINKING,
+    // Claude 4.5
+    CLAUDE_4_5_OPUS_HIGH,
+    CLAUDE_4_5_OPUS_HIGH_THINKING,
+    CLAUDE_4_5_SONNET,
+    CLAUDE_4_5_SONNET_THINKING,
+    CLAUDE_4_5_HAIKU,
+    CLAUDE_4_5_HAIKU_THINKING,
+    // Claude 4
+    CLAUDE_4_SONNET,
+    CLAUDE_4_SONNET_THINKING,
+    // GPT-5.4
+    GPT_5_4_MEDIUM,
+    GPT_5_4_MEDIUM_FAST,
+    GPT_5_4_HIGH,
+    GPT_5_4_HIGH_FAST,
+    GPT_5_4_XHIGH,
+    GPT_5_4_XHIGH_FAST,
+    // GPT-5.3 Codex
+    GPT_5_3_CODEX,
+    GPT_5_3_CODEX_FAST,
+    GPT_5_3_CODEX_HIGH,
+    GPT_5_3_CODEX_HIGH_FAST,
+    GPT_5_3_CODEX_LOW,
+    GPT_5_3_CODEX_LOW_FAST,
+    GPT_5_3_CODEX_XHIGH,
+    GPT_5_3_CODEX_XHIGH_FAST,
+    GPT_5_3_CODEX_SPARK,
+    GPT_5_3_CODEX_SPARK_PREVIEW_HIGH,
+    GPT_5_3_CODEX_SPARK_PREVIEW_LOW,
+    // GPT-5.2
+    GPT_5_2,
+    GPT_5_2_FAST,
+    GPT_5_2_HIGH,
+    GPT_5_2_HIGH_FAST,
+    GPT_5_2_LOW,
+    GPT_5_2_LOW_FAST,
+    GPT_5_2_XHIGH,
+    GPT_5_2_XHIGH_FAST,
+    GPT_5_2_CODEX,
+    GPT_5_2_CODEX_FAST,
+    GPT_5_2_CODEX_HIGH,
+    GPT_5_2_CODEX_HIGH_FAST,
+    GPT_5_2_CODEX_LOW,
+    GPT_5_2_CODEX_LOW_FAST,
+    GPT_5_2_CODEX_XHIGH,
+    GPT_5_2_CODEX_XHIGH_FAST,
+    // GPT-5.1
+    GPT_5_1_CODEX_MAX,
+    GPT_5_1_CODEX_MAX_HIGH,
+    GPT_5_1_CODEX_MAX_LOW,
+    GPT_5_1_CODEX_MAX_XHIGH,
+    GPT_5_1_CODEX_MAX_MEDIUM_FAST,
+    GPT_5_1_CODEX_MAX_HIGH_FAST,
+    GPT_5_1_CODEX_MAX_LOW_FAST,
+    GPT_5_1_CODEX_MAX_XHIGH_FAST,
+    GPT_5_1_CODEX,
+    GPT_5_1_CODEX_HIGH,
+    GPT_5_1_CODEX_FAST,
+    GPT_5_1_CODEX_HIGH_FAST,
+    GPT_5_1_CODEX_LOW,
+    GPT_5_1_CODEX_LOW_FAST,
+    GPT_5_1,
+    GPT_5_1_FAST,
+    GPT_5_1_HIGH,
+    GPT_5_1_HIGH_FAST,
+    GPT_5_1_LOW,
+    GPT_5_1_LOW_FAST,
+    GPT_5_1_CODEX_MINI,
+    GPT_5_1_CODEX_MINI_HIGH,
+    GPT_5_1_CODEX_MINI_LOW,
+    // Google
+    GEMINI_3_PRO,
+    GEMINI_3_FLASH,
     GEMINI_2_5_PRO_PREVIEW_05_06,
     GEMINI_2_5_FLASH_PREVIEW_05_20,
+    // Other
+    O3,
+    GPT_4_1,
+    GPT_5_MINI,
+    GPT_5_NANO,
+    GROK_CODE_FAST_1,
     DEEPSEEK_R1_0528,
     DEEPSEEK_V3_1,
     GROK_4,
     GROK_4_FAST_REASONING,
     GROK_4_FAST_NON_REASONING,
     KIMI_K2_INSTRUCT,
+    KIMI_K2_5,
 ];
 
 // 只支持Max的模型
-const MAX_MODELS: [&str; 8] = [
+const MAX_MODELS: &[&str] = &[
+    CLAUDE_4_6_OPUS_MAX,
+    CLAUDE_4_6_OPUS_MAX_THINKING,
     CLAUDE_4_OPUS,
     CLAUDE_4_OPUS_THINKING,
     CLAUDE_4_OPUS_LEGACY,
@@ -870,10 +1125,10 @@ mod tests {
     #[test]
     fn check_duplicates() {
         let targets: [(&str, &[&str]); 4] = [
-            ("THINKING", &SUPPORTED_THINKING_MODELS),
-            ("IMAGE", &SUPPORTED_IMAGE_MODELS),
-            ("MAX", &SUPPORTED_MAX_MODELS),
-            ("MAX_ONLY", &MAX_MODELS),
+            ("THINKING", SUPPORTED_THINKING_MODELS),
+            ("IMAGE", SUPPORTED_IMAGE_MODELS),
+            ("MAX", SUPPORTED_MAX_MODELS),
+            ("MAX_ONLY", MAX_MODELS),
         ];
 
         let mut failed = false;
