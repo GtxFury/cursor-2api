@@ -1,42 +1,62 @@
-use super::model::anthropic::ToolResultBlockParam;
 use byte_str::ByteStr;
-use bytes::Bytes;
-use core::{
-    pin::Pin,
-    task::{Context, Poll},
-};
-use futures::Stream;
-use manually_init::ManuallyInit;
 use parking_lot::RwLock;
-use reqwest::{DataStream, Decoder};
-use tokio::sync::mpsc;
+use std::sync::LazyLock;
+use std::time::Instant;
 
 type HashMap<K, V> = hashbrown::HashMap<K, V, ahash::RandomState>;
-type BoxError = Box<dyn ::core::error::Error + Send + Sync>;
-type SessionTx = mpsc::Sender<ToolResultBlockParam>;
 
-pub struct Session {
-    stream: DataStream<Decoder>,
-    sender: mpsc::Sender<Result<Bytes, BoxError>>,
+const SESSION_TTL_SECS: u64 = 3600;
+const CLEANUP_INTERVAL_SECS: u64 = 300;
+
+struct Entry {
+    model_call_id: ByteStr,
+    last_access: Instant,
 }
 
-impl Stream for Session {
-    type Item = Result<Bytes, reqwest::Error>;
-    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        Pin::new(&mut self.stream).poll_next(cx)
-    }
+pub struct SessionStore {
+    sessions: RwLock<HashMap<String, Entry>>,
+    last_cleanup: RwLock<Instant>,
 }
 
-pub struct Registry {
-    inner: RwLock<HashMap<ByteStr, SessionTx>>,
-}
+static STORE: LazyLock<SessionStore> = LazyLock::new(|| SessionStore {
+    sessions: RwLock::new(HashMap::default()),
+    last_cleanup: RwLock::new(Instant::now()),
+});
 
-impl Registry {
-    pub fn init() {
-        REGISTRY.init(Registry {
-            inner: RwLock::new(HashMap::with_capacity_and_hasher(16, ahash::RandomState::new())),
+impl SessionStore {
+    #[inline]
+    pub fn global() -> &'static Self { &STORE }
+
+    pub fn get(&self, session_id: &str) -> Option<ByteStr> {
+        self.try_cleanup();
+        let sessions = self.sessions.read();
+        sessions.get(session_id).and_then(|entry| {
+            if entry.last_access.elapsed().as_secs() < SESSION_TTL_SECS {
+                Some(entry.model_call_id.clone())
+            } else {
+                None
+            }
         })
     }
-}
 
-static REGISTRY: ManuallyInit<Registry> = ManuallyInit::new();
+    pub fn save(&self, session_id: String, model_call_id: ByteStr) {
+        let mut sessions = self.sessions.write();
+        sessions.insert(session_id, Entry { model_call_id, last_access: Instant::now() });
+    }
+
+    fn try_cleanup(&self) {
+        let should_cleanup = {
+            let last = self.last_cleanup.read();
+            last.elapsed().as_secs() >= CLEANUP_INTERVAL_SECS
+        };
+        if !should_cleanup {
+            return;
+        }
+        if let Some(mut last) = self.last_cleanup.try_write() {
+            *last = Instant::now();
+            drop(last);
+            let mut sessions = self.sessions.write();
+            sessions.retain(|_, entry| entry.last_access.elapsed().as_secs() < SESSION_TTL_SECS);
+        }
+    }
+}

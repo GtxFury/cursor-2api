@@ -206,9 +206,19 @@ atomic_enum!(LastContentType = u8);
 // 聊天处理函数的签名
 pub async fn handle_chat_completions(
     State(state): State<Arc<AppState>>,
+    headers: http::HeaderMap,
     mut extensions: Extensions,
     OpenAiJson(request): OpenAiJson<openai::ChatCompletionCreateParams>,
 ) -> Result<Response<Body>, (StatusCode, InfallibleJson<OpenAiError>)> {
+    let session_id = headers
+        .get("X-Session-ID")
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s.to_owned());
+
+    let existing_model_call_id = session_id
+        .as_deref()
+        .and_then(|sid| super::session::SessionStore::global().get(sid));
+
     let (ext_token, use_pri) =
         __unwrap!(extensions.remove::<TokenBundleResult>()).map_err(|e| e.into_openai_tuple())?;
 
@@ -451,7 +461,9 @@ pub async fn handle_chat_completions(
         });
         let index = Arc::new(AtomicU32::new(0));
         let start_time = std::time::Instant::now();
-        let decoder = Arc::new(Mutex::new(StreamDecoder::new()));
+        let decoder = Arc::new(Mutex::new(
+            StreamDecoder::with_model_call_id(existing_model_call_id),
+        ));
         let stream_state = Arc::new(Atomic::new(StreamState::NotStarted));
         let last_content_type = Arc::new(Atomic::new(LastContentType::None));
         let is_need = stream_options.include_usage;
@@ -689,6 +701,7 @@ pub async fn handle_chat_completions(
 
         let response_id_clone = response_id.clone();
         let decoder_clone = decoder.clone();
+        let session_id_for_save = session_id.clone();
 
         let created = DateTime::utc_now().timestamp();
 
@@ -777,6 +790,13 @@ pub async fn handle_chat_completions(
                 let mut decoder_guard = decoder.lock().await;
                 let content_delays = decoder_guard.take_content_delays();
                 let thinking_content = decoder_guard.take_thinking_content();
+
+                if let Some(sid) = session_id_for_save {
+                    if let Some(mcid) = decoder_guard.get_saved_model_call_id() {
+                        super::session::SessionStore::global().save(sid, mcid.clone());
+                        crate::debug!("saved model_call_id to session store");
+                    }
+                }
 
                 log_manager::update_log(current_id, LogUpdate::Delays(content_delays, thinking_content))
                     .await;
@@ -1006,9 +1026,19 @@ pub async fn handle_chat_completions(
 
 pub async fn handle_messages(
     State(state): State<Arc<AppState>>,
+    headers: http::HeaderMap,
     mut extensions: Extensions,
     AnthropicJson(request): AnthropicJson<anthropic::MessageCreateParams>,
 ) -> Result<Response<Body>, (StatusCode, InfallibleJson<AnthropicError>)> {
+    let session_id = headers
+        .get("X-Session-ID")
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s.to_owned());
+
+    let existing_model_call_id = session_id
+        .as_deref()
+        .and_then(|sid| super::session::SessionStore::global().get(sid));
+
     let (ext_token, use_pri) = __unwrap!(extensions.remove::<TokenBundleResult>())
         .map_err(AuthError::into_anthropic_tuple)?;
 
@@ -1253,7 +1283,9 @@ pub async fn handle_messages(
         });
         let index = Arc::new(AtomicU32::new(0));
         let start_time = std::time::Instant::now();
-        let decoder = Arc::new(Mutex::new(StreamDecoder::new()));
+        let decoder = Arc::new(Mutex::new(
+            StreamDecoder::with_model_call_id(existing_model_call_id),
+        ));
         let stream_state = Arc::new(Atomic::new(StreamState::NotStarted));
         let last_content_type = Arc::new(Atomic::new(LastContentType::None));
 
@@ -1567,6 +1599,7 @@ pub async fn handle_messages(
         }
 
         let decoder_clone = decoder.clone();
+        let session_id_for_save = session_id.clone();
 
         // 处理后续的stream
         let stream = stream
@@ -1650,6 +1683,13 @@ pub async fn handle_messages(
                 let mut decoder_guard = decoder.lock().await;
                 let content_delays = decoder_guard.take_content_delays();
                 let thinking_content = decoder_guard.take_thinking_content();
+
+                if let Some(sid) = session_id_for_save {
+                    if let Some(mcid) = decoder_guard.get_saved_model_call_id() {
+                        super::session::SessionStore::global().save(sid, mcid.clone());
+                        crate::debug!("saved model_call_id to session store (messages)");
+                    }
+                }
 
                 log_manager::update_log(current_id, LogUpdate::Delays(content_delays, thinking_content))
                     .await;

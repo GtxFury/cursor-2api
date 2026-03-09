@@ -73,6 +73,14 @@ def_const_models!(
     CLAUDE_4_OPUS_LEGACY => "claude-4-opus-legacy",
     CLAUDE_4_OPUS_THINKING_LEGACY => "claude-4-opus-thinking-legacy",
 
+    // Anthropic 模型 (4.6)
+    CLAUDE_4_6_OPUS_HIGH => "claude-4.6-opus-high",
+    CLAUDE_4_6_OPUS_HIGH_THINKING => "claude-4.6-opus-high-thinking",
+    CLAUDE_4_6_SONNET => "claude-4.6-sonnet",
+    CLAUDE_4_6_SONNET_THINKING => "claude-4.6-sonnet-thinking",
+    CLAUDE_4_6_HAIKU => "claude-4.6-haiku",
+    CLAUDE_4_6_HAIKU_THINKING => "claude-4.6-haiku-thinking",
+
     // Cursor 模型
     COMPOSER_1 => "composer-1",
     CURSOR_SMALL => "cursor-small",
@@ -525,6 +533,18 @@ create_models! {
     ],
 
     ANTHROPIC => [
+        ModelIds::new(CLAUDE_4_6_OPUS_HIGH)
+            .with_client_id("Opus 4.6"),
+        ModelIds::new(CLAUDE_4_6_OPUS_HIGH_THINKING)
+            .with_client_id("Opus 4.6"),
+        ModelIds::new(CLAUDE_4_6_SONNET)
+            .with_client_id("Sonnet 4.6"),
+        ModelIds::new(CLAUDE_4_6_SONNET_THINKING)
+            .with_client_id("Sonnet 4.6"),
+        ModelIds::new(CLAUDE_4_6_HAIKU)
+            .with_client_id("Haiku 4.6"),
+        ModelIds::new(CLAUDE_4_6_HAIKU_THINKING)
+            .with_client_id("Haiku 4.6"),
         ModelIds::new(CLAUDE_4_5_OPUS_HIGH)
             .with_client_id("Opus 4.5"),
         ModelIds::new(CLAUDE_4_5_OPUS_HIGH_THINKING)
@@ -664,7 +684,10 @@ pub const FREE_MODELS: [&str; 6] =
 //     [GPT_4O_128K, GEMINI_1_5_FLASH_500K, CLAUDE_3_HAIKU_200K, CLAUDE_3_5_SONNET_200K];
 
 // 支持思考的模型
-const SUPPORTED_THINKING_MODELS: [&str; 42] = [
+const SUPPORTED_THINKING_MODELS: [&str; 45] = [
+    CLAUDE_4_6_OPUS_HIGH_THINKING,
+    CLAUDE_4_6_SONNET_THINKING,
+    CLAUDE_4_6_HAIKU_THINKING,
     CLAUDE_4_5_OPUS_HIGH_THINKING,
     CLAUDE_4_5_SONNET_THINKING,
     GPT_5_1_CODEX_MAX,
@@ -710,9 +733,15 @@ const SUPPORTED_THINKING_MODELS: [&str; 42] = [
 ];
 
 // 支持图像的模型（DEFAULT 始终支持）
-const SUPPORTED_IMAGE_MODELS: [&str; 51] = [
+const SUPPORTED_IMAGE_MODELS: [&str; 57] = [
     DEFAULT,
     COMPOSER_1,
+    CLAUDE_4_6_OPUS_HIGH,
+    CLAUDE_4_6_OPUS_HIGH_THINKING,
+    CLAUDE_4_6_SONNET,
+    CLAUDE_4_6_SONNET_THINKING,
+    CLAUDE_4_6_HAIKU,
+    CLAUDE_4_6_HAIKU_THINKING,
     CLAUDE_4_5_OPUS_HIGH,
     CLAUDE_4_5_OPUS_HIGH_THINKING,
     CLAUDE_4_5_SONNET,
@@ -765,9 +794,15 @@ const SUPPORTED_IMAGE_MODELS: [&str; 51] = [
 ];
 
 // 支持Max与非Max的模型
-const SUPPORTED_MAX_MODELS: [&str; 47] = [
+const SUPPORTED_MAX_MODELS: [&str; 53] = [
     DEFAULT,
     COMPOSER_1,
+    CLAUDE_4_6_OPUS_HIGH,
+    CLAUDE_4_6_OPUS_HIGH_THINKING,
+    CLAUDE_4_6_SONNET,
+    CLAUDE_4_6_SONNET_THINKING,
+    CLAUDE_4_6_HAIKU,
+    CLAUDE_4_6_HAIKU_THINKING,
     CLAUDE_4_5_OPUS_HIGH,
     CLAUDE_4_5_OPUS_HIGH_THINKING,
     CLAUDE_4_5_SONNET,

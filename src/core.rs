@@ -7,5 +7,5 @@ pub mod error;
 pub mod model;
 pub mod route;
 pub mod service;
-// pub mod session;
+pub mod session;
 pub mod stream;

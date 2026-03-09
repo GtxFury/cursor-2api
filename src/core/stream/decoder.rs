@@ -121,6 +121,7 @@ impl StreamMessage {
 struct Context {
     raw_args_len: usize,
     processed: u32,
+    saved_model_call_id: Option<ByteStr>,
     // 调试使用
     // counter: u32,
 }
@@ -143,7 +144,9 @@ pub struct StreamDecoder {
 }
 
 impl StreamDecoder {
-    pub fn new() -> Self {
+    pub fn new() -> Self { Self::with_model_call_id(None) }
+
+    pub fn with_model_call_id(model_call_id: Option<ByteStr>) -> Self {
         // static COUNTER: AtomicU32 = AtomicU32::new(0);
         Self {
             buffer: Buffer::with_capacity(64),
@@ -153,6 +156,7 @@ impl StreamDecoder {
             context: Context {
                 raw_args_len: 0,
                 processed: 0,
+                saved_model_call_id: model_call_id,
                 // counter: COUNTER.fetch_add(1, Ordering::SeqCst),
             },
             empty_stream_count: 0,
@@ -161,6 +165,11 @@ impl StreamDecoder {
             first_result_taken: false,
             has_seen_content: false,
         }
+    }
+
+    #[inline]
+    pub fn get_saved_model_call_id(&self) -> Option<&ByteStr> {
+        self.context.saved_model_call_id.as_ref()
     }
 
     #[inline]
@@ -348,13 +357,24 @@ impl StreamDecoder {
                     stream_unified_chat_response_with_tools::Response,
                 };
                 match response {
-                    Response::ClientSideToolV2Call(response) => {
+                    Response::ClientSideToolV2Call(mut response) => {
                         let mut result = None;
                         let mut finish = false;
 
-                        // if !response.raw_args.is_empty() {
-                        //     crate::debug!("detected: {:?}", response.raw_args);
-                        // }
+                        if let Some(ref model_call_id) = response.model_call_id {
+                            if ctx.saved_model_call_id.is_none() {
+                                ctx.saved_model_call_id = Some(model_call_id.clone());
+                                crate::debug!("saved model_call_id for reuse: {}", model_call_id);
+                            } else {
+                                let saved_id = ctx.saved_model_call_id.as_ref().unwrap();
+                                crate::debug!(
+                                    "reusing model_call_id: {} -> {}",
+                                    model_call_id,
+                                    saved_id
+                                );
+                                response.model_call_id = Some(saved_id.clone());
+                            }
+                        }
 
                         if response.is_streaming {
                             use core::cmp::Ordering;
