@@ -8,4 +8,6 @@ services:
     env_file:
       - .env
     volumes:
+      - ./.env:/app/.env:ro
       - ./data:/app/data
+    user: "0:0"
